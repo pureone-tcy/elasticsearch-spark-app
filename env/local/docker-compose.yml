@@ -1,0 +1,37 @@
+version: "3.6"
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.0.0
+    ports:
+    - "9200:9200"
+    - "9300:9300"
+    environment:
+      ES_JAVA_OPTS: "-Xmx512m -Xms512m"
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+
+#  logstash:
+#    image: docker.elastic.co/logstash/logstash:7.0.0
+#    environment:
+#      LS_JAVA_OPTS: "-Xmx512m -Xms512m"
+#      ELASTICSEARCH_URL: http://elasticsearch:9200
+#    volumes:
+#    - ./logstash/config/template:/usr/share/logstash/config/template
+#    - ./logstash/pipeline:/usr/share/logstash/pipeline
+#    - ./logstash/pipeline/input:/tmp/input
+#    depends_on:
+#    - elasticsearch
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.0.0
+    ports:
+    - "5601:5601"
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+    depends_on:
+    - elasticsearch
+
+  redis:
+    image: redis:latest
+    ports:
+    - "6379:6379"
+    command: redis-server
